@@ -48,33 +48,51 @@ const registerUser = async (req, res) => {
 }
 
 // Login User
-const loginUser = async(req, res) => {
+const loginUser = async (req, res) => {
     try {
-        const {email, password} = req.body;
+        const { email, password } = req.body;
 
         // check if user exists
-        const existingUser = await User.findOne({email});
-        if(!existingUser) {
+        const existingUser = await User.findOne({ email });
+        if (!existingUser) {
             return res.status(404).json({
                 message: "User not found with this email."
             })
         }
         // Validate the Password.
         const isPasswordValid = await bcrypt.compare(password, existingUser.passwordHash);
-        if(!isPasswordValid) {
+        if (!isPasswordValid) {
             return res.status(401).json({
                 message: "Invalid Email or Password"
             })
         }
 
         // Generate a JWT Token.
-        
+        const token = jwt.sign({
+            userId: existingUser.id,
+            isAdmin: existingUser.isAdmin,
+        },
+            process.env.JWT_SECRET, // set this in environment variables.
+            { expiresIn: "1d" }
+        );
+        res.status(200).json({
+            message: "User Logged In Successfully",
+            token,
+            existingUser: {
+                id: existingUser.id,
+                name: existingUser.name,
+                email: existingUser.email,
+                phone: existingUser.phone,
+                isAdmin: existingUser.isAdmin
+            }
+        })
+
     } catch (err) {
         console.error("Error Logging In: ", err);
         res.status(500).json({
             message: "Error Logging In",
             err: err.message,
-        })   
+        })
     }
 }
 
