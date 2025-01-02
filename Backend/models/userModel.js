@@ -43,13 +43,13 @@ const userSchema = new mongoose.Schema({
     }
 })
 
-// for Converting the "_id" to "id".
-userSchema.virtual('id').get(function () {
-    return this._id.toHexString();
-});
+// // for Converting the "_id" to "id".
+// userSchema.virtual('id').get(function () {
+//     return this._id.toHexString();
+// });
 
-userSchema.set('toJSON', {
-    virtuals: true,
-})
+// userSchema.set('toJSON', {
+//     virtuals: true,
+// })
 
 module.exports = mongoose.model("User", userSchema); 

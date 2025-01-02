@@ -9,7 +9,6 @@ const base = "/api/v1";
 router.use(`${base}/products`, productRoutes);
 router.use(`${base}/categories`, categoryRoutes);
 router.use(`${base}/users`, userRoutes);
-
-
+router.use(`${base}/auth`, userRoutes);
 
 module.exports = router;
